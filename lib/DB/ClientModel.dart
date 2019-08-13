@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+//import 'package:xnote/Views/XIcon.dart';
+
 XNoteItem clientFromJson(String str) {
   final jsonData = json.decode(str);
   return XNoteItem.fromMap(jsonData);

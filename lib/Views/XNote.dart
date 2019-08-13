@@ -5,7 +5,7 @@ import 'package:xnote/DB/ClientModel.dart';
 import 'package:xnote/DB/DBIf.dart';
 import 'NoteItemView.dart';
 import 'XNote.Fin.dart';
-
+import 'XIcon.dart';
 
 
 class XNote extends StatefulWidget {
@@ -16,9 +16,16 @@ class XNote extends StatefulWidget {
 class XNoteState extends State<XNote> {
   // data for testing
   List<XNoteItem> testClients = [
-    XNoteItem(summary: "Raouf", description: "Rahiche", blocked: false),
-    XNoteItem(summary: "Zaki", description: "oun", blocked: true),
-    XNoteItem(summary: "oussama", description: "ali", blocked: false),
+    XNoteItem(
+      summary: "Raouf",
+      description: "Rahiche",
+      blocked: false,
+      xNoteType: math.Random().nextInt(XNoteType.tUnknownNote.index),
+    ),
+    XNoteItem(summary: "Zaki", description: "oun", blocked: true,
+      xNoteType: math.Random().nextInt(XNoteType.tUnknownNote.index),),
+    XNoteItem(summary: "oussama", description: "ali", blocked: false,
+      xNoteType: math.Random().nextInt(XNoteType.tUnknownNote.index),),
   ];
   void callbackSetState(){
     setState(() {});

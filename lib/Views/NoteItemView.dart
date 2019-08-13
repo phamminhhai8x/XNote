@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:xnote/DB/ClientModel.dart';
 import 'package:xnote/DB/DBIf.dart';
-import 'NoteDetail.dart';
+//import 'NoteDetail.dart';
 import 'XNote.dart';
+import 'XIcon.dart';
+//import 'XNoteTypeMenu.dart';
 
 class NoteItemView extends ListTile{
   final XNoteItem item;
@@ -14,13 +16,10 @@ class NoteItemView extends ListTile{
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(item.description),
-      leading: Text(item.id.toString()),
-      onTap: (){
-        Navigator.push(context,
-          MaterialPageRoute(
-            builder: (context) => NoteDetail(theItem: item),
-          ),
-        );
+      //leading: Text(item.id.toString()),
+      leading: XNoteTypeIcon(xNoteItem: item),
+      onTap: ()async {
+        //final XNoteType deptName = await XNoteTypeMenu.asyncSimpleDialog(context);
       },
       trailing: Checkbox(
         onChanged: (bool value) {
@@ -35,6 +34,7 @@ class NoteItemView extends ListTile{
     return ListTile(
       title: Text(item.description),
       leading: Text(item.id.toString()),
+      //leading: XIcon(xNoteType: 1),
       onTap: (){
 
       },
