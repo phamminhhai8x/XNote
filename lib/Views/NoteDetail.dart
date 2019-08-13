@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../ClientModel.dart';
-import '../DBIf.dart';
+import 'package:xnote/DB/ClientModel.dart';
+import 'package:xnote/DB/DBIf.dart';
 
 class NoteDetail extends StatelessWidget{
   final teFirstName = TextEditingController();
@@ -10,12 +10,12 @@ class NoteDetail extends StatelessWidget{
   final teID = TextEditingController();
 
 
-  final NoteItem theItem;
+  final XNoteItem theItem;
   final FocusNode myFocus = new FocusNode();
   NoteDetail({Key key, @required this.theItem}) : super(key: key){
-    teFirstName.text = theItem.firstName;
+    teFirstName.text = theItem.summary;
 
-    teLastName.text = theItem.lastName;
+    teLastName.text = theItem.description;
     teID.text = theItem.id.toString();
   }
 
@@ -40,7 +40,7 @@ class NoteDetail extends StatelessWidget{
             child: new TextField(
               controller: teLastName,
               onChanged: (text){
-                theItem.lastName = text;
+                theItem.description = text;
               },
             ),
           )
