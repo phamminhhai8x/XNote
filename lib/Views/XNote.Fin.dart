@@ -26,11 +26,12 @@ class XNoteFin extends StatelessWidget {
               XNoteItem item = snapshot.data[index];
               return Dismissible(
                 key: UniqueKey(),
-                background: Container(color: Colors.red),
-                onDismissed: (direction) {
-                  DBProvider.db.deleteClient(item.id);
-                },
+                background: Container(),
+//                onDismissed: (direction) {
+//                  //DBProvider.db.deleteClient(item.id);
+//                },
                 //child: NoteItemView.viewTitle(item, this),
+
                 child: NoteItemView(item, this._state),
               );
             },

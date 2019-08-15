@@ -3,8 +3,34 @@ import 'package:xnote/DB/Language.dart';
 
 import 'XIcon.dart';
 
-enum Departments { Production, Research, Purchasing, Marketing, Accounting }
-class XNoteTypeMenu{
+class XNoteTypeMenuSelect1 extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return
+      SimpleDialog(
+        title: const Text('XNoteTypeMenuSelect '),
+        //children: XNoteType.values.map((x) => getMenuType(x)).toList(),
+        children: XNoteType.values.map((x) => new SimpleDialogOption(
+          onPressed: () {
+            print("context: " + context.toString());
+            Navigator.pop(context, XNoteType.values[x.index]);
+          },
+          child: Row( children: <Widget>[
+            CircleAvatar(
+                backgroundColor: XNoteTypeIcon.xType2BColors[x],
+                child: Icon(
+                  XNoteTypeIcon.xType2Icons[x],
+                  color: Colors.white,
+                )
+            ),
+            Text(XNoteTypeIcon.xType2Name[x]),
+          ],) ,
+        )).toList(),
+      );
+  }
+
+}
+class XNoteTypeMenuSelect2{
   static BuildContext myContext;
   static Widget getMenuType(XNoteType xNoteType){
     return new SimpleDialogOption(
@@ -15,10 +41,9 @@ class XNoteTypeMenu{
         CircleAvatar(
             backgroundColor: Colors.green,
             child: Icon(
-              XNoteTypeIcon.xIconList[xNoteType],
+              XNoteTypeIcon.xType2Icons[xNoteType],
               color: Colors.white,)
         ),
-        //Text(xNoteType.toString()),
         Text(DemoLocalizations.title),
       ],) ,
     );
@@ -26,12 +51,33 @@ class XNoteTypeMenu{
   static Future<XNoteType> asyncSimpleDialog(BuildContext context) async {
     return await showDialog<XNoteType>(
         context: context,
+
         barrierDismissible: true,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: const Text('Select change type '),
-            children: XNoteType.values.map((x) => getMenuType(x)).toList(),
-          );
-        });
+
+        builder: (context) {
+          return
+            SimpleDialog(
+              title: const Text('XNoteTypeMenuSelect '),
+              children: XNoteType.values.map((x) => new SimpleDialogOption(
+                onPressed: () {
+                  print("context: " + context.toString());
+                  Navigator.of(context).pop(XNoteType.values[x.index]);
+                },
+                child: Row( children: <Widget>[
+                  CircleAvatar(
+                      backgroundColor: XNoteTypeIcon.xType2BColors[x],
+                      child: Icon(
+                        XNoteTypeIcon.xType2Icons[x],
+                        color: Colors.white,
+                      )
+                  ),
+                  Text(XNoteTypeIcon.xType2Name[x]),
+                ],) ,
+              )
+              ).toList(),
+            );
+        }
+
+        );
   }
 }
