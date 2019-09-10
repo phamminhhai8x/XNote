@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-//import 'package:xnote/Views/XIcon.dart';
-
 XNoteItem clientFromJson(String str) {
   final jsonData = json.decode(str);
   return XNoteItem.fromMap(jsonData);
@@ -13,27 +11,49 @@ String clientToJson(XNoteItem data) {
 }
 
 class XNoteItem {
+  /// index automatic
   int id;
+  /// summary of note
   String summary;
+  /// detail description
   String description;
+  /// status view or not
   bool blocked;
+  /// index of parent note
   int idTarget;
+  /// index of user create note
   int idUser;
+  /// note type
   int xNoteType;
+  /// create date (can't modify by user)
   int createDate;
+  /// plan start date
   int startDatePlan;
+  /// plan end date
   int endDatePlan;
+  /// actual start date
   int startDateActual;
+  /// actual end date
   int endDateActual;
+  /// unit of cost (day, hour, minute, second, dollar, lit , meter...)
   String unitCost;
+  /// cost estimate
   int costEstimate;
+  /// cost remain in-progress
   int costRemain;
+  /// cost used in-progress
   int costUsed;
+  /// id user detect or raise note
   int idUserOwner;
+  /// user follow to resolve this note
   int idUserAssign;
+  /// level of note, at simple it 0, but if have a parent it is 1
   int level;
+  /// if the note have child, this field will count it's children
   int subNoteCount;
+  /// the index of it children will store in this field
   String csvSubNoteList;
+  /// status of note
   int status;
 
   XNoteItem({
@@ -63,8 +83,10 @@ class XNoteItem {
   XNoteItem clone(){
     return XNoteItem.fromMap( this.toMap());
   }
-
-  factory XNoteItem.fromMap(Map<String, dynamic> json) => new XNoteItem(
+  
+  /// json convert to object
+  factory XNoteItem.fromMap(Map<String, dynamic> json) {
+    return new XNoteItem(
     id: json["id"],
     summary: json["summary"],
     description: json["description"],
@@ -88,6 +110,7 @@ class XNoteItem {
     csvSubNoteList: json["csvSubNoteList"] == null ? null : json["csvSubNoteList"],
     status: json["status"] == null ? null : json["status"],
   );
+  }
 
   Map<String, dynamic> toMap() => {
     "id": id,

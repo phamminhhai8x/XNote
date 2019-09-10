@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:xnote/Common/XTypeCommon.dart';
 
 import 'package:xnote/DB/ClientModel.dart';
 import 'package:xnote/DB/DBIf.dart';
 import 'NoteItemView.dart';
+import 'XCommonDialog.dart';
 import 'XNote.dart';
+import 'XNoteType.dart';
 
 class XNoteFin extends StatelessWidget {
   final XNoteState _state;
   XNoteFin(this._state);
-
-  static XNoteFin getXNoteFin(XNoteState theState){
-    return XNoteFin(theState);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +26,13 @@ class XNoteFin extends StatelessWidget {
               return Dismissible(
                 key: UniqueKey(),
                 background: Container(),
-//                onDismissed: (direction) {
-//                  //DBProvider.db.deleteClient(item.id);
-//                },
-                //child: NoteItemView.viewTitle(item, this),
-
-                child: NoteItemView(item, this._state),
+                confirmDismiss: (DismissDirection direction) async {
+                  return XCommonDialog.xAlertDialog(context);
+                },
+                onDismissed: (direction)  {
+                  xLog("onDismissed");
+                },
+                child: NoteItemView(item, _state),
               );
             },
           );
@@ -40,6 +40,37 @@ class XNoteFin extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         }
       },
+    );
+  }
+
+  static Future<XNoteType> asyncEditNoteFin(BuildContext context) async {
+    return await showDialog<XNoteType>
+      (
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return
+            SimpleDialog(
+              title: const Text('XNoteTypeMenuSelect '),
+              children: XNoteType.values.map((x) => new SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, XNoteType.values[x.index]);
+                },
+                child: Row( children: <Widget>[
+                  CircleAvatar(
+                      backgroundColor: XNoteTypeIcons.data[x.index].bgrColor,
+                      child: Icon(
+                        XNoteTypeIcons.data[x.index].icon,
+                        color: Colors.white,
+                      )
+                  ),
+                  //Text(xNoteType2Name[x]),
+                  Text(" " + XNoteTypeIcons.data[x.index].nameType),
+                ],) ,
+              )
+              ).toList(),
+            );
+        }
     );
   }
 }

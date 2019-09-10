@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:xnote/Common/XTypeCommon.dart';
 import 'ClientModel.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -138,10 +139,8 @@ class DBProvider {
   }
 
   Future<List<XNoteItem>> getBlockedClients() async {
+    xLog("get");
     final db = await database;
-
-    print("works");
-    // var res = await db.rawQuery("SELECT * FROM Client WHERE blocked=1");
     var res = await db.query("Client", where: "blocked = ? ", whereArgs: [1]);
 
     List<XNoteItem> list =
@@ -150,6 +149,7 @@ class DBProvider {
   }
 
   Future<List<XNoteItem>> getAllClients() async {
+    xLog("getAll");
     final db = await database;
     var res = await db.query("Client");
     List<XNoteItem> list =
