@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xnote/Common/XTypeCommon.dart';
 
-import 'package:xnote/DB/ClientModel.dart';
+import 'package:xnote/DB/XNoteItem.dart';
 import 'package:xnote/DB/DBIf.dart';
 import 'NoteItemView.dart';
 import 'XCommonDialog.dart';

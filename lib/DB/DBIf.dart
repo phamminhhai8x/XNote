@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xnote/Common/XTypeCommon.dart';
-import 'ClientModel.dart';
+import 'XNoteItem.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'DBIf.DBQuery.dart';
 
 class DBProvider {
   DBProvider._();
@@ -16,98 +18,28 @@ class DBProvider {
 
   Future<Database> get database async {
     if (_database != null) return _database;
-    // if _database is null we instantiate it
     _database = await initDB();
     return _database;
   }
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "TestDB7.db");
-    return await openDatabase(path, version: 1, onOpen: (db) {},
-        onCreate: (Database db, int version) async {
-          await db.execute("CREATE TABLE Client ("
-              "id INTEGER PRIMARY KEY,"
-              "summary TEXT,"
-              "description TEXT,"
-              "blocked BIT,"
-              "idTarget INTEGER,"
-              "idUser INTEGER,"
-              "xNoteType INTEGER,"
-              "createDate INTEGER,"
-              "startDatePlan INTEGER,"
-              "endDatePlan INTEGER,"
-              "startDateActual INTEGER,"
-              "endDateActual INTEGER,"
-              "unitCost TEXT,"
-              "costEstimate INTEGER,"
-              "costRemain INTEGER,"
-              "costUsed INTEGER,"
-              "idUserOwner INTEGER,"
-              "idUserAssign INTEGER,"
-              "level INTEGER,"
-              "subNoteCount INTEGER,"
-              "csvSubNoteList TEXT,"
-              "status INTEGER"
-              ")");
-        });
+    String path = join(documentsDirectory.path, DBQuery.DATA_FILE_NAME);
+    return await openDatabase(path, version: 1, onOpen: (db) async {
+      await db.execute(DBQuery.NOTE_CREATE_TABLE);
+    }, onCreate: (Database db, int version) async {
+      await db.execute(DBQuery.NOTE_CREATE_TABLE);
+    });
   }
 
   newClient(XNoteItem newClient) async {
     final db = await database;
-    //get the biggest id in the table
-    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM Client");
+
+    var table = await db.rawQuery(DBQuery.NOTE_GET_MAX_ID);
     int id = table.first["id"];
-    //insert to the table using the new id
+
     var raw = await db.rawInsert(
-        "INSERT Into Client (id,"
-            "summary,"
-            "description,"
-            "blocked,"
-            "idTarget,"
-            "idUser,"
-            "xNoteType,"
-            "createDate,"
-            "startDatePlan,"
-            "endDatePlan,"
-            "startDateActual,"
-            "endDateActual,"
-            "unitCost,"
-            "costEstimate,"
-            "costRemain,"
-            "costUsed,"
-            "idUserOwner,"
-            "idUserAssign,"
-            "level,"
-            "subNoteCount,"
-            "csvSubNoteList,"
-            "status"
-            ")"
-            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        [
-          id,
-          newClient.summary,
-          newClient.description,
-          newClient.blocked,
-          newClient.idTarget,
-          newClient.idUser,
-          newClient.xNoteType,
-          newClient.createDate,
-          newClient.startDatePlan,
-          newClient.endDatePlan,
-          newClient.startDateActual,
-          newClient.endDateActual,
-          newClient.unitCost,
-          newClient.costEstimate,
-          newClient.costRemain,
-          newClient.costUsed,
-          newClient.idUserOwner,
-          newClient.idUserAssign,
-          newClient.level,
-          newClient.subNoteCount,
-          newClient.csvSubNoteList,
-          newClient.status
-        ]);
+        DBQuery.NOTE_INSERT_NEW, DBQuery.getArguments(id, newClient));
     return raw;
   }
 
@@ -115,62 +47,62 @@ class DBProvider {
     final db = await database;
     XNoteItem blocked = client.clone();
     blocked.blocked = !client.blocked;
-//    XNoteItem(
-//        id: client.id,
-//        summary: client.summary,
-//        description: client.description,
-//        blocked: !client.blocked);
-    var res = await db.update("Client", blocked.toMap(),
+
+    var res = await db.update(DBQuery.NOTE_TABLE_NAME, blocked.toMap(),
         where: "id = ?", whereArgs: [client.id]);
     return res;
   }
 
   updateClient(XNoteItem newClient) async {
     final db = await database;
-    var res = await db.update("Client", newClient.toMap(),
+    var res = await db.update(DBQuery.NOTE_TABLE_NAME, newClient.toMap(),
         where: "id = ?", whereArgs: [newClient.id]);
     return res;
   }
 
   getClient(int id) async {
     final db = await database;
-    var res = await db.query("Client", where: "id = ?", whereArgs: [id]);
+    var res = await db
+        .query(DBQuery.NOTE_TABLE_NAME, where: "id = ?", whereArgs: [id]);
     return res.isNotEmpty ? XNoteItem.fromMap(res.first) : null;
   }
 
   Future<List<XNoteItem>> getBlockedClients() async {
     xLog("get");
     final db = await database;
-    var res = await db.query("Client", where: "blocked = ? ", whereArgs: [1]);
+    var res = await db
+        .query(DBQuery.NOTE_TABLE_NAME, where: "blocked = ? ", whereArgs: [1]);
 
     List<XNoteItem> list =
-    res.isNotEmpty ? res.map((c) => XNoteItem.fromMap(c)).toList() : [];
+        res.isNotEmpty ? res.map((c) => XNoteItem.fromMap(c)).toList() : [];
     return list;
   }
 
   Future<List<XNoteItem>> getAllClients() async {
     xLog("getAll");
     final db = await database;
-    var res = await db.query("Client");
+
+    var res = await db.query(DBQuery.NOTE_TABLE_NAME);
     List<XNoteItem> list =
-    res.isNotEmpty ? res.map((c) => XNoteItem.fromMap(c)).toList() : [];
+        res.isNotEmpty ? res.map((c) => XNoteItem.fromMap(c)).toList() : [];
     return list;
   }
+
   Future<List<XNoteItem>> getAllClientsSelected() async {
     final db = await database;
-    var res = await db.query("Client" );
+    var res = await db.query(DBQuery.NOTE_TABLE_NAME);
     List<XNoteItem> list =
-    res.isNotEmpty ? res.map((c) => XNoteItem.fromMap(c)).toList() : [];
+        res.isNotEmpty ? res.map((c) => XNoteItem.fromMap(c)).toList() : [];
     return list;
   }
 
   deleteClient(int id) async {
     final db = await database;
-    return db.delete("Client", where: "id = ?", whereArgs: [id]);
+    return db.delete(DBQuery.NOTE_TABLE_NAME, where: "id = ?", whereArgs: [id]);
   }
 
   deleteAll() async {
     final db = await database;
-    db.rawDelete("Delete * from Client");
+    db.rawDelete(DBQuery.NOTE_DELETE_ALL);
   }
 }

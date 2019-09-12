@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xnote/Common/XTypeCommon.dart';
 //import 'package:flutter/foundation.dart';
 import 'dart:math' as math;
-import 'package:xnote/DB/ClientModel.dart';
+import 'package:xnote/DB/XNoteItem.dart';
 import 'package:xnote/DB/DBIf.dart';
 import 'NoteItemView.dart';
 import 'XNote.Fin.dart';

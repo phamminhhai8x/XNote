@@ -1,6 +1,6 @@
 // Define a custom Form widget.
 import 'package:flutter/material.dart';
-import 'package:xnote/DB/ClientModel.dart';
+import 'package:xnote/DB/XNoteItem.dart';
 
 
 class MyCustomForm extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:xnote/DB/ClientModel.dart';
+import 'package:xnote/DB/XNoteItem.dart';
 import 'package:xnote/DB/DBIf.dart';
 
 class NoteDetail extends StatelessWidget{
