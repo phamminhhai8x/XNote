@@ -3,3 +3,4 @@ encoding//testing/__init__.py=utf-8
 encoding/DataFrameOp.py=utf-8
 encoding/DataStruct.py=utf-8
 encoding/__init__.py=utf-8
+encoding/excel2dart2sqflite.py=utf-8

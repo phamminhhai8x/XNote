@@ -1,43 +1,45 @@
-import pandas as pd
-# from pandas import ExcelWriter
-# from pandas import ExcelFile
-# from xlrd import book
-# from elementpath.xpath1_parser import axis
+# -*- coding: utf-8 -*-
+from DataStruct import DataStruct as DS
+import sys
+import getopt
+import os
+from distutils import text_file
 
-def checkExcelFormat():
-    if (1):
-        return True
+
+def main(argv):
+    inputfile = ''
+    outputdir = ''
+    myName = os.path.basename(__file__)
+    try:
+        opts, args = getopt.getopt(argv, "hi:o:", ["ifile=", "oDir="])
+
+    except getopt.GetoptError:
+        print(myName + ' -i <inputfile.xlsx> [-o outputfolder]')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print(myName + ' -i <inputfile.xlsx> [-o outputfolder]')
+            sys.exit()
+        elif opt in ("-i", "--ifile"):
+            inputfile = arg
+        elif opt in ("-o", "--oDir"):
+            outputdir = arg
+        else:
+            print(myName + ' -i <inputfile.xlsx> [-o outputfolder>')
+    if os.path.isfile(inputfile) == False:
+        print('Can not find input file ' + inputfile)
     else:
-        return False
-def checkExcelFormat2():
-    if (1):
-        return True
-    else:
-        return False
-def checkExcelFormat3():
-    xl_file = pd.ExcelFile("../lib/DB/DBTables.xlsx")
- 
-    df = pd.read_excel('../lib/DB/DBTables.xlsx')
-    print(df)
-     
-    #nul_rows = xl_file.book.sheet_by_index(0).nrows
-    mybook = xl_file.book
-    mySheet = mybook.sheet_by_index(0)
-    nul_rows = mySheet.nrows
-    print(nul_rows)
-    print(df.iat[0,1])
-     
-    real_df = df.dropna(axis=1, how='all')
-    if real_df.iat[0,0] != 'XNoteItem':
-        print('Err')
-    else:
-        print(real_df.iloc[1:,1:])
-        
-    if (1):
-        return True
-    else:
-        return False
+        theDS = DS(inputfile)
+        if not os.path.exists(outputdir):
+            outputdir = './GENERATE/DB/'
+            print('Warning use default output folder: ' + outputdir)
+            if not os.path.exists(outputdir):
+                os.makedirs(outputdir)
+        with open(outputdir + 'ClientModel.dart', 'w') as text_file:
+            text_file.write(theDS.toDartClass())
+        with open(outputdir + 'DBIf.DBQuery.dart', 'w') as text_file:
+            text_file.write(theDS.toSqfliteDBQueryClass())
 
 
-
-
+if __name__ == '__main__':
+    main(sys.argv[1:])

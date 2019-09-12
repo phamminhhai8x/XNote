@@ -17,8 +17,7 @@ class TestDataFrameOp(unittest.TestCase):
         self.assertTrue(theDFO.getName() == 'XNoteItem','init by path of xlsx file')
     def test_init3(self):
         with self.assertRaises(TypeError):
-            theDFO = DFO()
-            self.assertTrue(theDFO.getName() == '','init by nothing')
+            DFO()
             
 if __name__ == '__main__':
     unittest.main()
