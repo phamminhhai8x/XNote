@@ -31,13 +31,14 @@ def main(argv):
     else:
         theDS = DS(inputfile)
         if not os.path.exists(outputdir):
-            outputdir = './GENERATE/DB/'
-            print('Warning use default output folder: ' + outputdir)
+            outputdir = '''D:\GENERATE\DB'''
+            print('Warning use default output folder: ' +
+                  os.path.abspath(outputdir))
             if not os.path.exists(outputdir):
                 os.makedirs(outputdir)
-        with open(outputdir + 'ClientModel.dart', 'w') as text_file:
+        with open(outputdir + '/ClientModel.dart', 'w') as text_file:
             text_file.write(theDS.toDartClass())
-        with open(outputdir + 'DBIf.DBQuery.dart', 'w') as text_file:
+        with open(outputdir + '/DBIf.DBQuery.dart', 'w') as text_file:
             text_file.write(theDS.toSqfliteDBQueryClass())
 
 

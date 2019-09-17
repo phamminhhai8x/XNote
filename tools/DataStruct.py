@@ -173,14 +173,13 @@ String clientToJson(%s data) {
         return rs % (self.theName)
 
     def toSqfliteDBQueryClass(self):
-        rs = """
-import '%s.dart';
+        rs = """import '%s.dart';
 
 class DBQuery {
   static const DATA_FILE_NAME = "%s.db";
   static const TABLE_NAME = "%s";
-  static const CREATE_TABLE = "%s";
-  static const NOTE_GET_MAX_ID =
+  static const CREATE_TABLE = %s;
+  static const GET_MAX_ID =
       "SELECT MAX(id)+1 as id FROM " + TABLE_NAME;
   static const INSERT_NEW = %s;
   static const DELETE_ALL = "Delete * from " + TABLE_NAME;
@@ -231,7 +230,7 @@ static List<dynamic> getArguments(int id, %s %s) {
                 for i in range(self.elementsCount())
             ]) +
             '\n")"' +
-            '\n" VALUES (' + '?,' * (self.elementsCount() - 1) + '?)";'
+            '\n" VALUES (' + '?,' * (self.elementsCount() - 1) + '?)"'
         )
 
     def genSQLInsertItem(self, index):
